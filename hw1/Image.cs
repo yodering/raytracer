@@ -120,6 +120,8 @@ public class Image
                 int green = (int)(255 * Math.Pow(current.Y, 1 / Gamma));
                 int blue = (int)(255 * Math.Pow(current.Z, 1 / Gamma));
 
+                // implement clamping
+
                 solution.SetPixel(i, j, Color.FromArgb(alpha, red, green, blue));
             }
         }
