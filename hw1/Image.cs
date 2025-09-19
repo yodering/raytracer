@@ -110,7 +110,7 @@ public class Image
         for (int j = 0; j < Height; j++)
         { // go through each pixel and apply gamma correction and write to file
 
-            int row = Height - 1 - j;
+            int row = Height - 1 - j; // flipping the origin thing
 
             for (int i = 0; i < Width; i++)
             {

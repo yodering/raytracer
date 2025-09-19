@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/yoder/Documents/CSC361/hw1/hw1/hw1.csproj": {}
+    "/Users/yoder/Documents/CSC361/raytracer/hw1/hw1.csproj": {}
   },
   "projects": {
-    "/Users/yoder/Documents/CSC361/hw1/hw1/hw1.csproj": {
+    "/Users/yoder/Documents/CSC361/raytracer/hw1/hw1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/yoder/Documents/CSC361/hw1/hw1/hw1.csproj",
+        "projectUniqueName": "/Users/yoder/Documents/CSC361/raytracer/hw1/hw1.csproj",
         "projectName": "hw1",
-        "projectPath": "/Users/yoder/Documents/CSC361/hw1/hw1/hw1.csproj",
+        "projectPath": "/Users/yoder/Documents/CSC361/raytracer/hw1/hw1.csproj",
         "packagesPath": "/Users/yoder/.nuget/packages/",
-        "outputPath": "/Users/yoder/Documents/CSC361/hw1/hw1/obj/",
+        "outputPath": "/Users/yoder/Documents/CSC361/raytracer/hw1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/yoder/.nuget/NuGet/NuGet.Config"
