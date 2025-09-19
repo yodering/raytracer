@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// Represents a 3D vector with single-precision components and common operations.
 /// </summary>
-namespace Raytracer.HW1;
+namespace Raytracer.HW2;
 
 public class Vector
 {

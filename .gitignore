@@ -1,1 +1,14 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio workspace
+.vs/
+
+# User-specific IDE files
+*.user
+*.suo
+*.userprefs
+
+# macOS
 .DS_Store

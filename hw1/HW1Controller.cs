@@ -1,5 +1,7 @@
 using System;
 
+namespace Raytracer.HW1;
+
 public class HW1Controller
 {
     /// <summary>

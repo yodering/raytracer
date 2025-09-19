@@ -6,7 +6,7 @@ using IronSoftware.Drawing;
 /// <summary>
 /// Simple RGBA image buffer with gamma-correct saving.
 /// </summary>
-namespace Raytracer.HW1;
+namespace Raytracer.HW2;
 
 public class Image
 {
