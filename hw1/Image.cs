@@ -126,7 +126,8 @@ public class Image
 
                 // implement clamping
 
-                solution.SetPixel(i, j, Color.FromArgb(alpha, red, green, blue));
+
+                solution.SetPixel(i, j, Color.FromArgb(alpha, Math.Clamp(red, 0, 255), Math.Clamp(green, 0, 255), Math.Clamp(blue, 0, 255)));
             }
         }
         solution.SaveAs(name); // different save for ironsoftware
