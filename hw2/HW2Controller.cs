@@ -6,8 +6,16 @@ public class HW2Controller
 {
     public static void Main(string[] args)
     {
-        var img = new Image(64, 64, 2.2f);
-        img.Paint(32, 32, new Vector(1f, 0f, 0f), 255);
-        img.SaveImage("output.png");
+        Camera c = new Camera();
+
+        c.RenderIMage("test.bmp");
+
+        Camera c2 = new Camera(Camera.Projection.Perspective,
+                    new Vector(0.0f, 0.0f, 50.0f),
+                    new Vector(0.0f, 0.0f, 0.0f),
+                    new Vector(0.0f, 0.0f, 0.0f)
+                    );
+
+        c2.RenderIMage("test.bmp");
     }
 }
