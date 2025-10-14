@@ -141,8 +141,9 @@ public class Camera
                     // linear interpolation: (1 - t) * color1 + t * color2
                     color = (1.0f - x) * white + x * blue;
                 }
-                else // perspective projection
+                else
                 {
+                    // perspective projection
                     // get the ray direction through pixel (i, j)
                     Vector direction = GetPerspectiveRayDirection(i, j);
 
