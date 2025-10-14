@@ -19,7 +19,12 @@ public class Ray
     {
         // checks for validity
         Origin = origin ?? throw new ArgumentNullException(nameof(origin));
-        Direction = direction ?? throw new ArgumentNullException(nameof(direction));
+
+        if (direction == null)
+            throw new ArgumentNullException(nameof(direction));
+        // normalize
+        Vector.Normalize(ref direction);
+        Direction = direction;
     }
 
     public Vector At(float t)
