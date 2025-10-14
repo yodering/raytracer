@@ -154,11 +154,7 @@ public class Camera
                     color = (1.0f - y) * white + y * blue;
                 }
 
-                Vector normalizedColor = new Vector(
-                    color.X / 255.0f,
-                    color.Y / 255.0f,
-                    color.Z / 255.0f
-                );
+                Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f,color.Z / 255.0f);
 
                 // set the pixel color in the image buffer
                 image.Paint(i, j, normalizedColor);
