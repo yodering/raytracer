@@ -172,7 +172,7 @@ public class Camera
     private Vector GetOrthographicRayOrigin(int i, int j)
     {
 
-        // nap horizontal pixel coordinate to camera space [-left, right]
+        // map horizontal pixel coordinate to camera space [-left, right]
         float u_coord = _left + (_right - _left) * (i + 0.5f) / _width;
 
         // map vertical pixel coordinate to camera space [bottom, top]
