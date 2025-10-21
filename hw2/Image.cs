@@ -104,6 +104,20 @@ public class Image
     }
 
     /// <summary>
+    /// Clamps a value between a minimum and maximum.
+    /// </summary>
+    /// <param name="value">The value to clamp.</param>
+    /// <param name="min">Minimum value.</param>
+    /// <param name="max">Maximum value.</param>
+    /// <returns>Clamped value.</returns>
+    private static int Clamp(int value, int min, int max)
+    {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    }
+
+    /// <summary>
     /// Saves the image to a file, applying gamma correction to RGB channels.
     /// </summary>
     /// <param name="name">Output file path (e.g., .png).</param>
@@ -125,9 +139,11 @@ public class Image
                 int blue = (int)(255 * Math.Pow(current.Z, 1 / Gamma));
 
                 // implement clamping
+                red = Clamp(red, 0, 255);
+                green = Clamp(green, 0, 255);
+                blue = Clamp(blue, 0, 255);
 
-
-                solution.SetPixel(i, j, Color.FromArgb(alpha, Math.Clamp(red, 0, 255), Math.Clamp(green, 0, 255), Math.Clamp(blue, 0, 255)));
+                solution.SetPixel(i, j, Color.FromArgb(alpha, red, green, blue));
             }
         }
         solution.SaveAs(name); // different save for ironsoftware

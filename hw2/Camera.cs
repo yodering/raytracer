@@ -122,83 +122,93 @@ public class Camera
         Vector blue = new Vector(128, 200, 255);
 
         // each pixel
-        for (int j = 0; j < _height; j++)
+        if (_projection == Projection.Orthographic)
         {
-            for (int i = 0; i < _width; i++)
+            for (int j = 0; j < _height; j++)
             {
-                Vector color;
-
-                if (_projection == Projection.Orthographic)
+                for (int i = 0; i < _width; i++)
                 {
-                    // for orthographic: get the ray origin through pixel (i, j)
-                    Vector origin = GetOrthographicRayOrigin(i, j);
+                    // create ray through pixel (i, j)
+                    Ray ray = GetOrthographicRay(i, j);
 
+                    Vector origin = ray.Origin;
                     Vector.Normalize(ref origin);
                     float x = origin.X;
 
                     x = Math.Max(0.0f, x);
 
                     // linear interpolation: (1 - t) * color1 + t * color2
-                    color = (1.0f - x) * white + x * blue;
-                }
-                else
-                {
-                    // perspective projection
-                    // get the ray direction through pixel (i, j)
-                    Vector direction = GetPerspectiveRayDirection(i, j);
+                    Vector color = (1.0f - x) * white + x * blue;
 
-                    float y = direction.Y;
+                    Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
+
+                    // set the pixel color in the image buffer
+                    image.Paint(i, j, normalizedColor);
+                }
+            }
+        }
+        else
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                for (int i = 0; i < _width; i++)
+                {
+                    // create ray through pixel (i, j)
+                    Ray ray = GetPerspectiveRay(i, j);
+
+                    float y = ray.Direction.Y;
 
                     y = Math.Max(0.0f, y);
 
-                    color = (1.0f - y) * white + y * blue;
+                    Vector color = (1.0f - y) * white + y * blue;
+
+                    Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
+
+                    // set the pixel color in the image buffer
+                    image.Paint(i, j, normalizedColor);
                 }
-
-                Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f,color.Z / 255.0f);
-
-                // set the pixel color in the image buffer
-                image.Paint(i, j, normalizedColor);
             }
         }
         image.SaveImage(filename);
     }
 
     /// <summary>
-    /// Computes the ray origin for orthographic projection through pixel (i, j).
+    /// Creates a ray for orthographic projection through pixel (i, j).
     /// </summary>
     /// <param name="i">Pixel x-coordinate.</param>
     /// <param name="j">Pixel y-coordinate.</param>
-    /// <returns>The ray origin in world coordinates.</returns>
-    private Vector GetOrthographicRayOrigin(int i, int j)
+    /// <returns>A Ray object with origin and direction for the pixel.</returns>
+    private Ray GetOrthographicRay(int i, int j)
     {
-
         // map horizontal pixel coordinate to camera space [-left, right]
-        float u_coord = _left + (_right - _left) * (i + 0.5f) / _width;
+        float u_coord = _left + (_right - _left) * (i) / _width;
 
         // map vertical pixel coordinate to camera space [bottom, top]
-        float v_coord = _bottom + (_top - _bottom) * (j + 0.5f) / _height;
-        Vector origin = _eye + u_coord * _u + v_coord * _v - _near * _w;
+        float v_coord = _bottom + (_top - _bottom) * (j) / _height;
 
-        return origin;
+        Vector origin = _eye + u_coord * _u + v_coord * _v - _near * _w;
+        Vector direction = -_w;
+
+        return new Ray(origin, direction);
     }
 
     /// <summary>
-    /// Computes the ray direction for perspective projection through pixel (i, j).
+    /// Creates a ray for perspective projection through pixel (i, j).
     /// </summary>
     /// <param name="i">Pixel x-coordinate.</param>
     /// <param name="j">Pixel y-coordinate.</param>
-    /// <returns>The normalized ray direction.</returns>
-    private Vector GetPerspectiveRayDirection(int i, int j)
+    /// <returns>A Ray object with origin at the eye and direction through the pixel.</returns>
+    private Ray GetPerspectiveRay(int i, int j)
     {
-        // map pixel (i, j) to a direction vector from the eye through the pixel
-
         // map horizontal pixel coordinate to camera space [left, right]
         float u_coord = _left + (_right - _left) * (i + 0.5f) / _width;
 
         // map vertical pixel coordinate to camera space [bottom, top]
         float v_coord = _bottom + (_top - _bottom) * (j + 0.5f) / _height;
-        Vector direction = -_near * _w + u_coord * _u + v_coord * _v;
 
-        return direction;
+        // direction from eye through the pixel on the near plane
+        Vector direction = u_coord * _u + v_coord * _v - _near * _w;
+
+        return new Ray(_eye, direction);
     }
 }

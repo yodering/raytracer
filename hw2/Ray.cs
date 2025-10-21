@@ -5,9 +5,25 @@ namespace Raytracer.HW2;
 
 public class Ray
 {
+    private Vector _origin;
+    private Vector _direction;
 
-    public Vector Origin { get; set; }
-    public Vector Direction { get; set; }
+    public Vector Origin
+    {
+        get { return _origin; }
+        set { _origin = value; }
+    }
+
+    public Vector Direction
+    {
+        get { return _direction; }
+        set
+        {
+            Vector normalizedValue = new Vector(value.X, value.Y, value.Z);
+            Vector.Normalize(ref normalizedValue);
+            _direction = normalizedValue;
+        }
+    }
 
     public Ray()
     {
@@ -23,8 +39,9 @@ public class Ray
         if (direction == null)
             throw new ArgumentNullException(nameof(direction));
         // normalize
-        Vector.Normalize(ref direction);
-        Direction = direction;
+        Vector normalizedDirection = new Vector(direction.X, direction.Y, direction.Z);
+        Vector.Normalize(ref normalizedDirection);
+        Direction = normalizedDirection;
     }
 
     public Vector At(float t)
