@@ -201,10 +201,10 @@ public class Camera
     private Ray GetPerspectiveRay(int i, int j)
     {
         // map horizontal pixel coordinate to camera space [left, right]
-        float u_coord = _left + (_right - _left) * (i + 0.5f) / _width;
+        float u_coord = _left + (_right - _left) * (i) / _width;
 
         // map vertical pixel coordinate to camera space [bottom, top]
-        float v_coord = _bottom + (_top - _bottom) * (j + 0.5f) / _height;
+        float v_coord = _bottom + (_top - _bottom) * (j) / _height;
 
         // direction from eye through the pixel on the near plane
         Vector direction = u_coord * _u + v_coord * _v - _near * _w;
