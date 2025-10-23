@@ -186,7 +186,7 @@ public class Camera
         // map vertical pixel coordinate to camera space [bottom, top]
         float v_coord = _bottom + (_top - _bottom) * j / _height;
 
-        Vector origin = _eye + u_coord * _u + v_coord * _v - _near * _w;
+        Vector origin = _eye + u_coord * _u + v_coord * _v;
         Vector direction = -_w;
 
         return new Ray(origin, direction);
@@ -207,7 +207,7 @@ public class Camera
         float v_coord = _bottom + (_top - _bottom) * j / _height;
 
         // direction from eye through the pixel on the near plane
-        Vector direction = u_coord * _u + v_coord * _v - _near * _w;
+        Vector direction = u_coord * _u + v_coord * _v - _w;
 
         return new Ray(_eye, direction);
     }
