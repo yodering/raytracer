@@ -112,14 +112,10 @@ public class Camera
     /// Casts a ray through each pixel and colors it accordingly.
     /// </summary>
     /// <param name="filename">The name of the .bmp file to save.</param>
-    public void RenderImage(string filename)
+    public void RenderImage(string filename, Scene scene)
     {
 
-        // change to iron software?
         Image image = new Image(_width, _height, 0.8f);
-
-        Vector white = new Vector(255, 255, 255);
-        Vector blue = new Vector(128, 200, 255);
 
         // each pixel
         if (_projection == Projection.Orthographic)
@@ -131,18 +127,28 @@ public class Camera
                     // create ray through pixel (i, j)
                     Ray ray = GetOrthographicRay(i, j);
 
-                    Vector origin = ray.Origin;
-                    Vector.Normalize(ref origin);
-                    float x = origin.X;
+                    float closestT = float.PositiveInfinity;
+                    Shape closestShape = null;
 
-                    x = Math.Max(0.0f, x);
-
-                    // linear interpolation: (1 - t) * color1 + t * color2
-                    Vector color = (1.0f - x) * white + x * blue;
-
+                    foreach (Shape shape in scene.GetShapes())
+                    {
+                        float t = shape.Hit(ray);
+                        if (t > 0 && t < closestT && t <= _far)
+                        {
+                            closestT = t;
+                            closestShape = shape;
+                        }
+                    }
+                    Vector color;
+                    if (closestShape != null)
+                    {
+                        color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                    }
+                    else
+                    {
+                        color = new Vector(0, 0, 0);
+                    }
                     Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
-
-                    // set the pixel color in the image buffer
                     image.Paint(i, j, normalizedColor);
                 }
             }
@@ -156,15 +162,28 @@ public class Camera
                     // create ray through pixel (i, j)
                     Ray ray = GetPerspectiveRay(i, j);
 
-                    float y = ray.Direction.Y;
+                    float closestT = float.PositiveInfinity;
+                    Shape closestShape = null;
 
-                    y = Math.Max(0.0f, y);
-
-                    Vector color = (1.0f - y) * white + y * blue;
-
+                    foreach (Shape shape in scene.GetShapes())
+                    {
+                        float t = shape.Hit(ray);
+                        if (t > 0 && t < closestT && t <= _far)
+                        {
+                            closestT = t;
+                            closestShape = shape;
+                        }
+                    }
+                    Vector color;
+                    if (closestShape != null)
+                    {
+                        color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                    }
+                    else
+                    {
+                        color = new Vector(0, 0, 0);
+                    }
                     Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
-
-                    // set the pixel color in the image buffer
                     image.Paint(i, j, normalizedColor);
                 }
             }
