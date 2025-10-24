@@ -108,10 +108,13 @@ public class Camera
     }
 
     /// <summary>
-    /// Renders and saves an image to the specified file.
-    /// Casts a ray through each pixel and colors it accordingly.
+    /// Renders and saves a ray-traced image to the specified file.
+    /// For each pixel, casts a ray through the scene and performs intersection testing
+    /// with all shapes. Colors pixels based on the closest intersection using distance-based
+    /// shading where closer objects appear brighter than distant ones.
     /// </summary>
     /// <param name="filename">The name of the .bmp file to save.</param>
+    /// <param name="scene">The scene containing shapes to render.</param>
     public void RenderImage(string filename, Scene scene)
     {
 

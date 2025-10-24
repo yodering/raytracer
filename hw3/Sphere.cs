@@ -3,17 +3,28 @@ using System.Collections.Generic;
 
 namespace Raytracer.HW3;
 
+/// <summary>
+/// Represents a sphere in 3D space for ray tracing.
+/// A sphere is defined by its center point and radius.
+/// </summary>
 public class Sphere : Shape
 {
     private float _radius;
 
 
+    /// <summary>
+    /// Gets or sets the radius of the sphere.
+    /// </summary>
     public float Radius
     {
         get { return _radius; }
         set { _radius = value; }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the Sphere class with default values.
+    /// Creates a unit sphere centered at the origin.
+    /// </summary>
     public Sphere()
     {
         Center = new Vector(0f, 0f, 0f);
@@ -21,6 +32,11 @@ public class Sphere : Shape
         DiffuseColor = new Vector(255f, 255f, 255f);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the Sphere class with specified center and radius.
+    /// </summary>
+    /// <param name="center">The center point of the sphere.</param>
+    /// <param name="radius">The radius of the sphere.</param>
     public Sphere(Vector center, float radius)
     {
         Center = center;

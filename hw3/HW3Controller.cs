@@ -23,7 +23,7 @@ public class HW3Controller
         s2.DiffuseColor = new Vector(200f, 0.0f, 255f);
         s.DiffuseColor = new Vector(255f, 0.0f, 0.0f);
         Shape p1 = new Plane();
-        p1.DiffuseColor = new Vector(0.0f, 0.0f, 255f);
+        p1.DiffuseColor = new Vector(0.0f, 0.0f, 255f); // adding colors to plane
         scene.AddShape(ref p1);
         scene.AddShape(ref s3);
         scene.AddShape(ref s2);
