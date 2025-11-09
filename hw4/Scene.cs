@@ -9,6 +9,13 @@ namespace Raytracer.HW4;
 public class Scene
 {
     private List<Shape> shapes;
+    private Vector _light;
+
+    public Vector Light
+    {
+        get { return _light; }
+        set { _light = value; }
+    }
 
     /// <summary>
     /// Initializes a new instance of the Scene class with an empty collection of shapes.
@@ -16,7 +23,12 @@ public class Scene
     public Scene()
     {
         shapes = new List<Shape>();
+        _light = new Vector(0f, 0f, 0f);
     }
+
+
+
+
 
     /// <summary>
     /// Adds a shape to the scene.

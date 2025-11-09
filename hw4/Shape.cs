@@ -7,12 +7,39 @@ public abstract class Shape
 {
 
     private Vector _diffuseColor;
+    private Vector _ambientColor;
+    private Vector _specularColor;
+    private float _shininess;
     private Vector _center;
 
      public Vector DiffuseColor
     {
         get { return _diffuseColor; }
         set { _diffuseColor = value; }
+    }
+
+    public Vector A
+    {
+        get { return _ambientColor; }
+        set { _ambientColor = value; }
+    }
+
+    public Vector D
+    {
+        get { return _diffuseColor; }
+        set { _diffuseColor = value; }
+    }
+
+    public Vector S
+    {
+        get { return _specularColor; }
+        set { _specularColor = value; }
+    }
+
+    public float Shiny
+    {
+        get { return _shininess; }
+        set { _shininess = value; }
     }
 
     public Vector Center

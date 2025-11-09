@@ -145,7 +145,30 @@ public class Camera
                     Vector color;
                     if (closestShape != null)
                     {
-                        color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                        // color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                        Vector hitPoint = ray.Origin + closestT * ray.Direction;
+
+                        Vector normal = closestShape.Normal(hitPoint);
+                        Vector.Normalize(ref normal);
+
+                        Vector lightDirection = scene.Light - hitPoint;
+                        Vector.Normalize(ref lightDirection);
+
+                        Vector viewDirection = _eye - hitPoint;
+                        Vector.Normalize(ref viewDirection);
+
+                        Vector bisector = lightDirection + viewDirection;
+                        Vector.Normalize(ref bisector);
+
+                        Vector ambient = closestShape.A;
+
+                        float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
+                        Vector diffuse = closestShape.D * diffuseFactor;
+
+                        float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
+                        Vector specular = closestShape.S * specularFactor;
+
+                        color = ambient + diffuse + specular;
                     }
                     else
                     {
@@ -180,7 +203,30 @@ public class Camera
                     Vector color;
                     if (closestShape != null)
                     {
-                        color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                        // color = closestShape.DiffuseColor * ((_far - closestT) / _far);
+                        Vector hitPoint = ray.Origin + closestT * ray.Direction;
+
+                        Vector normal = closestShape.Normal(hitPoint);
+                        Vector.Normalize(ref normal);
+
+                        Vector lightDirection = scene.Light - hitPoint;
+                        Vector.Normalize(ref lightDirection);
+
+                        Vector viewDirection = _eye - hitPoint;
+                        Vector.Normalize(ref viewDirection);
+
+                        Vector bisector = lightDirection + viewDirection;
+                        Vector.Normalize(ref bisector);
+
+                        Vector ambient = closestShape.A;
+
+                        float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
+                        Vector diffuse = closestShape.D * diffuseFactor;
+
+                        float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
+                        Vector specular = closestShape.S * specularFactor;
+
+                        color = ambient + diffuse + specular;
                     }
                     else
                     {
