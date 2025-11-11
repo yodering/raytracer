@@ -110,8 +110,9 @@ public class Camera
     /// <summary>
     /// Renders and saves a ray-traced image to the specified file.
     /// For each pixel, casts a ray through the scene and performs intersection testing
-    /// with all shapes. Colors pixels based on the closest intersection using distance-based
-    /// shading where closer objects appear brighter than distant ones.
+    /// with all shapes. Colors pixels based on the closest intersection using Blinn-Phong
+    /// shading with ambient, diffuse, and specular components. Includes shadow ray casting
+    /// to determine if surfaces are in shadow from the light source.
     /// </summary>
     /// <param name="filename">The name of the .bmp file to save.</param>
     /// <param name="scene">The scene containing shapes to render.</param>
@@ -119,6 +120,14 @@ public class Camera
     {
 
         Image image = new Image(_width, _height, 0.8f);
+        float[,] depthBuffer = new float[_width, _height];
+        for(int j = 0; j < _height; j++)
+        {
+            for (int i = 0; i < _width; i++)
+            {
+                depthBuffer[i, j] = float.PositiveInfinity;
+            }
+        }
 
         // each pixel
         if (_projection == Projection.Orthographic)
@@ -148,34 +157,62 @@ public class Camera
                         // color = closestShape.DiffuseColor * ((_far - closestT) / _far);
                         Vector hitPoint = ray.Origin + closestT * ray.Direction;
 
-                        Vector normal = closestShape.Normal(hitPoint);
-                        Vector.Normalize(ref normal);
-
-                        Vector lightDirection = scene.Light - hitPoint;
+                        // calculate distances
+                        Vector toLight = scene.Light - hitPoint;
+                        float distanceToLight = (float)~toLight;
+                        Vector lightDirection = toLight;
                         Vector.Normalize(ref lightDirection);
 
-                        Vector viewDirection = _eye - hitPoint;
-                        Vector.Normalize(ref viewDirection);
+                        Ray shadowRay = new Ray(hitPoint, lightDirection);
+                        bool inShadow = false;
+                        foreach (Shape shadowShape in scene.GetShapes())
+                        {
+                            float shadowT = shadowShape.Hit(shadowRay);
+                            // only count intersections between surface and light
+                            if (shadowT > 0.001f && shadowT < distanceToLight)
+                            {
+                                inShadow = true;
+                                break;
+                            }
+                        }
+                        if (inShadow)
+                        {
+                            color = new Vector(20, 20, 20);
+                        }
+                        else
+                        {
+                            Vector normal = closestShape.Normal(hitPoint);
+                            Vector.Normalize(ref normal);
 
-                        Vector bisector = lightDirection + viewDirection;
-                        Vector.Normalize(ref bisector);
+                            Vector viewDirection = _eye - hitPoint;
+                            Vector.Normalize(ref viewDirection);
 
-                        Vector ambient = closestShape.A;
+                            Vector bisector = lightDirection + viewDirection;
+                            Vector.Normalize(ref bisector);
 
-                        float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
-                        Vector diffuse = closestShape.D * diffuseFactor;
+                            Vector ambient = closestShape.A;
 
-                        float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
-                        Vector specular = closestShape.S * specularFactor;
+                            float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
+                            Vector diffuse = closestShape.D * diffuseFactor;
 
-                        color = ambient + diffuse + specular;
+                            float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
+                            Vector specular = closestShape.S * specularFactor;
+
+                            color = ambient + diffuse + specular;
+                        }
                     }
                     else
                     {
                         color = new Vector(0, 0, 0);
                     }
-                    Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
-                    image.Paint(i, j, normalizedColor);
+
+                    if (closestT < depthBuffer[i, j])
+                    {
+                        depthBuffer[i, j] = closestT;
+                        Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
+                        image.Paint(i, j, normalizedColor);
+
+                    }
                 }
             }
         }
@@ -206,34 +243,61 @@ public class Camera
                         // color = closestShape.DiffuseColor * ((_far - closestT) / _far);
                         Vector hitPoint = ray.Origin + closestT * ray.Direction;
 
-                        Vector normal = closestShape.Normal(hitPoint);
-                        Vector.Normalize(ref normal);
-
-                        Vector lightDirection = scene.Light - hitPoint;
+                        Vector toLight = scene.Light - hitPoint;
+                        float distanceToLight = (float)~toLight;
+                        Vector lightDirection = toLight;
                         Vector.Normalize(ref lightDirection);
 
-                        Vector viewDirection = _eye - hitPoint;
-                        Vector.Normalize(ref viewDirection);
+                        Ray shadowRay = new Ray(hitPoint, lightDirection);
+                        bool inShadow = false;
+                        foreach (Shape shadowShape in scene.GetShapes())
+                        {
+                            float shadowT = shadowShape.Hit(shadowRay);
+                            // only count intersections between surface and light
+                            if (shadowT > 0.001f && shadowT < distanceToLight)
+                            {
+                                inShadow = true;
+                                break;
+                            }
+                        }
+                        if (inShadow)
+                        {
+                            color = new Vector(20, 20, 20);
+                        }
+                        else
+                        {
+                            Vector normal = closestShape.Normal(hitPoint);
+                            Vector.Normalize(ref normal);
 
-                        Vector bisector = lightDirection + viewDirection;
-                        Vector.Normalize(ref bisector);
+                            Vector viewDirection = _eye - hitPoint;
+                            Vector.Normalize(ref viewDirection);
 
-                        Vector ambient = closestShape.A;
+                            Vector bisector = lightDirection + viewDirection;
+                            Vector.Normalize(ref bisector);
 
-                        float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
-                        Vector diffuse = closestShape.D * diffuseFactor;
+                            Vector ambient = closestShape.A;
 
-                        float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
-                        Vector specular = closestShape.S * specularFactor;
+                            float diffuseFactor = Math.Max(0, Vector.Dot(lightDirection, normal));
+                            Vector diffuse = closestShape.D * diffuseFactor;
 
-                        color = ambient + diffuse + specular;
+                            float specularFactor = (float)Math.Pow(Math.Max(0, Vector.Dot(bisector, normal)), closestShape.Shiny);
+                            Vector specular = closestShape.S * specularFactor;
+
+                            color = ambient + diffuse + specular;
+                        }
                     }
                     else
                     {
                         color = new Vector(0, 0, 0);
                     }
-                    Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
-                    image.Paint(i, j, normalizedColor);
+
+                    if (closestT < depthBuffer[i, j])
+                    {
+                        depthBuffer[i, j] = closestT;
+                        Vector normalizedColor = new Vector(color.X / 255.0f, color.Y / 255.0f, color.Z / 255.0f);
+                        image.Paint(i, j, normalizedColor);
+
+                    }
                 }
             }
         }
