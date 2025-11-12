@@ -1,9 +1,8 @@
-new additions to this hw3
+additions
 
-+ Shape.cs
-+ Sphere.cs
-+ Plane.cs
+SphereArray.bmp
+SphereScene.bmp
 
 modifications
 
-Camera.cs, RenderImage function
+Camera.cs, Shape.cs, Scene.cs
