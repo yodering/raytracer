@@ -12,6 +12,18 @@ public abstract class Shape
     private float _shininess;
     private Vector _center;
 
+    /// <summary>
+    /// Initializes a new instance of the Shape class with default values.
+    /// </summary>
+    public Shape()
+    {
+        _diffuseColor = new Vector(255f, 255f, 255f);
+        _ambientColor = new Vector(0f, 0f, 0f);
+        _specularColor = new Vector(0f, 0f, 0f);
+        _shininess = 1f;
+        _center = new Vector(0f, 0f, 0f);
+    }
+
      public Vector DiffuseColor
     {
         get { return _diffuseColor; }

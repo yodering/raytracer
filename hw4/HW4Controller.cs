@@ -78,6 +78,8 @@ public class HW4Controller
         float startX = -45f;
         float startY = -45f;
 
+        Vector specularColor = new Vector(255f, 255f, 255f);
+
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
@@ -86,18 +88,19 @@ public class HW4Controller
                 float y = startY + j * spacing;
                 float z = 0f;
 
-                Shape sphere = new Sphere(new Vector(x, y, z), radius);
-
                 float r = (float)(rand.NextDouble() * 255);
                 float g = (float)(rand.NextDouble() * 255);
                 float b = (float)(rand.NextDouble() * 255);
-
                 float shiny = (float)(rand.NextDouble() * 127) + 1f;
 
-                sphere.DiffuseColor = new Vector(r, g, b);
-                sphere.A = new Vector(r * 0.1f, g * 0.1f, b * 0.1f);
-                sphere.D = new Vector(r, g, b);
-                sphere.S = new Vector(255f, 255f, 255f);
+                Vector diffuseColor = new Vector(r, g, b);
+                Vector ambientColor = new Vector(r * 0.1f, g * 0.1f, b * 0.1f);
+
+                Shape sphere = new Sphere(new Vector(x, y, z), radius);
+                sphere.DiffuseColor = diffuseColor;
+                sphere.A = ambientColor;
+                sphere.D = diffuseColor;
+                sphere.S = specularColor;
                 sphere.Shiny = shiny;
 
                 scene.AddShape(ref sphere);
